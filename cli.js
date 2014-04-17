@@ -57,6 +57,11 @@ program
     .action(onTest);    
 
 program
+    .command('testdownload [registry]')
+    .description('test download time for specific or all registries')
+    .action(onTestDownload);    
+
+program
     .command('help')
     .description('print this help')
     .action(program.help);
@@ -215,6 +220,40 @@ function onTest(registry){
     });
 }
 
+function onTestDownload(registry){
+    var allRegistries = getAllRegistry();
+
+    var toTest;
+
+    if(registry){
+        if(!allRegistries.hasOwnProperty(registry)){
+            return;
+        }
+        toTest = only(allRegistries, registry);
+    }else{
+        toTest = allRegistries;
+    }
+
+    async.map(Object.keys(toTest), function(name, cbk){
+        var registry = toTest[name];
+        var test_package = registry.registry + 'coffee-script';
+        request(test_package, function(error, response, body){
+            cbk(null, {
+                name: name
+                , registry: registry.registry
+                , tarball: JSON.parse(body).versions["1.7.0"].dist.tarball
+                , error: error ? true : false
+            });
+        });
+    }, function(err, results){
+        var msg = [''];
+        results.forEach(function(result){
+            msg.push(result.name + ' - ' + result.tarball);
+        });
+        msg.push('');
+        printMsg(msg);
+    });    
+}
 
 
 /*//////////////// helper methods /////////////////*/
