@@ -2,7 +2,7 @@ nrm(1) -- npm registry manager
 ===
 
 `nrm` can help you easy and fast switch between different npm registries,
-now include: `npm`, `cnpm`, `eu`,  `au`, `sl(strongloop)`, `nj(nodejitsu)`.
+now include: `npm`, `cnpm`, `eu`,  `au`, `sl(strongloop)`, `nj(nodejitsu)`, `taobao`.
 
 Recently npm has some problem frequently, `nrm` will be helpful to all noders.
 
@@ -44,8 +44,10 @@ Usage: nrm [options] [command]
     use <registry>               change registry to registry
     add <registry> <url> [home]  add one custom registry
     del <registry>               delete one custom registry
+    rm <registry>                delete one custom registry (alias for del)
     home <registry> [browser]    open the homepage of registry with optional browser
     test [registry]              show the response time for one or all registries
+    testdw [registry]            test download time for specific or all registries
     help                         print this help
 
   Options:

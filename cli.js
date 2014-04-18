@@ -43,7 +43,7 @@ program
 
 program
     .command('rm <registry>')
-    .description('delete one custom registry')
+    .description('delete one custom registry (alias for del)')
     .action(onDel);
 
 program
@@ -57,7 +57,7 @@ program
     .action(onTest);    
 
 program
-    .command('testdownload [registry]')
+    .command('testdw [registry]')
     .description('test download time for specific or all registries')
     .action(onTestDownload);    
 
@@ -236,22 +236,21 @@ function onTestDownload(registry){
 
     async.map(Object.keys(toTest), function(name, cbk){
         var registry = toTest[name];
-        var test_package = registry.registry + 'coffee-script';
+        var test_package = registry.registry + 'npm';
         request(test_package, function(error, response, body){
             cbk(null, {
                 name: name
                 , registry: registry.registry
-                , tarball: JSON.parse(body).versions["1.7.0"].dist.tarball
+                , tarball: JSON.parse(body).versions["1.1.71"].dist.tarball
                 , error: error ? true : false
             });
         });
     }, function(err, results){
-        var msg = [''];
         results.forEach(function(result){
-            msg.push(result.name + ' - ' + result.tarball);
+            console.time(result.name);
+            request(result.tarball, function(error, response, body){
+                console.timeEnd(result.name);});
         });
-        msg.push('');
-        printMsg(msg);
     });    
 }
 
